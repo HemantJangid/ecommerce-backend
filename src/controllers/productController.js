@@ -19,5 +19,24 @@ module.exports = {
                 success: true,
             });
         })
+    },
+    addProduct: function (req, res) {
+        let data = req.body;
+        if(data.name && data.price && data.description && data.categoryId && data.vendorId) {
+            Product.addProduct(data, function(err, result) {
+                if(err) {
+                    return res.status(500).send({
+                        error: err,
+                        message: "Error in adding data",
+                        success: true,
+                    });
+                }
+                return res.status(200).send({
+                    message: "Product added successfully",
+                    product: result,
+                    success: true,
+                });
+            })
+        }
     }
 }
