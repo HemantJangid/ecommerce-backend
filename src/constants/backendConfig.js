@@ -15,8 +15,8 @@ module.exports = {
 		local: {
 			host: "127.0.0.1",
 			user: "root",
-			password: "",
-			database: "ecommerce"
+			password: "root12345",
+			database: "relevel"
 		},
 		prod: {
 			host: "relevel-ecommerce.cvyl0jb1nhb0.ap-south-1.rds.amazonaws.com",
