@@ -18,7 +18,7 @@ module.exports = {
         }
 
 
-        sqlConnection.executeQuery(sql, '', function(err, result) {
+        sqlConnection.executeQuery(sql, values, function(err, result) {
             cb(err, result);
         })
     },
