@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const auth = require("../util/auth");
 
 module.exports = {
   signup: function (req, res) {
@@ -98,10 +99,33 @@ module.exports = {
         }
         return res.status(200).send({
           message: "logged in successfully",
-          user: result[0],
+          user: result,
           success: true,
         });
       }, data);
+    }
+  },
+  isAuthenticated: function (req, res, next) {
+    const token = req.headers.auth;
+    try {
+      let response = auth.verifyToken(token);
+      User.getUserById(function (err, result) {
+        if (err) {
+          return res.status(401).send({
+            message: "invalid user",
+            err: error,
+            success: true,
+          });
+        }
+        req.user = result;
+        next();
+      }, response.id);
+    } catch (error) {
+      return res.status(500).send({
+        message: "invalid token",
+        err: error,
+        success: true,
+      });
     }
   },
 };

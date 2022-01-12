@@ -1,5 +1,6 @@
 const sqlConnection = require("../services/sqlConnection");
 const bcrypt = require("bcryptjs");
+const auth = require("../util/auth");
 
 module.exports = {
   signup: function (cb, data) {
@@ -51,7 +52,7 @@ module.exports = {
     });
   },
   securedSignin: function (cb, data) {
-    let sql = "SELECT * FROM Users WHERE Username=?";
+    let sql = "SELECT Username, Password, UserType FROM Users WHERE Username=?";
     let values = [];
     values.push(data.userName);
     sqlConnection.executeQuery(sql, values, function (err, result) {
@@ -60,10 +61,19 @@ module.exports = {
         result[0].Password
       );
       if (isValidPassword) {
-        cb(err, result);
+        const token = auth.generateToken(result[0]);
+        cb(err, { ...result[0], authToken: token });
       } else {
         cb(err, []);
       }
+    });
+  },
+  getUserById: function (cb, id) {
+    let sql = "SELECT Username, Password, UserType FROM Users WHERE ID=?";
+    let values = [];
+    values.push(id);
+    sqlConnection.executeQuery(sql, values, function (err, result) {
+      cb(err, result[0]);
     });
   },
 };
